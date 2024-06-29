@@ -120,4 +120,4 @@ async def main():
 def mlab_speed_test():
     asyncio.run(main())
 
-mlab_speed_test()
+#mlab_speed_test()

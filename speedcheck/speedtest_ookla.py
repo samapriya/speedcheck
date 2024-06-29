@@ -1,22 +1,25 @@
+import json
+
 import speedtest
 
 
-def test_internet_speed():
+def ookla_speed_test():
+    """
+    Runs a speedtest and displays results
+    """
+    print("\n"+"Running Ookla Speed Test (speedtest.net)"+"\n")
+
+    # Create a Speedtest object
+    st = speedtest.Speedtest()
+
     try:
-        st = speedtest.Speedtest()
-        print("Testing internet speed...")
-
-        # Perform the download speed test
-        download_speed = st.download() / 1000000  # Convert to Mbps
-
-        # Perform the upload speed test
-        upload_speed = st.upload() / 1000000  # Convert to Mbps
-
-        # Print the results
-        print("Download Speed: {:.2f} Mbps".format(download_speed))
-        print("Upload Speed: {:.2f} Mbps".format(upload_speed))
-
+        result_dict = {}
+        result_dict['Download Speed'] = f"{round(st.download() / 1000000,2)} Mbps"  # Convert to Mbps
+        result_dict['Upload Speed'] = f"{round(st.upload() / 1000000,2)} Mbps"  # Convert to Mbps
+        result_dict['Server Location'] = f"{st.results.server['name']}"
+        result_dict['Ping'] = f"{st.results.ping} ms"
+        print(json.dumps(result_dict,indent=2))
     except speedtest.SpeedtestException as e:
         print("An error occurred during the speed test:", str(e))
 
-test_internet_speed()
+#ookla_speed_test()

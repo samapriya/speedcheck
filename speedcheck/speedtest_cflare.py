@@ -275,4 +275,4 @@ def cflare_speedtest():
     result_dict['ISP'] = f"{data['tests']['isp'][0]}"
     print("\n"+json.dumps(result_dict, indent=2))
 
-cflare_speedtest()
+#cflare_speedtest()

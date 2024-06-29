@@ -96,4 +96,4 @@ def fast_speed_test():
     print("\n"+"Running Fast.com Speed Test (fast.com)"+"\n")
     asyncio.run(api(Options()))
 
-fast_speed_test()
+#fast_speed_test()

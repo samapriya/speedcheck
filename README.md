@@ -1,5 +1,9 @@
 # SpeedCheck
 
+![PyPI - Version](https://img.shields.io/pypi/v/speedcheck)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![CI speedcheck](https://github.com/samapriya/speedcheck/actions/workflows/CI.yml/badge.svg)](https://github.com/samapriya/speedcheck/actions/workflows/CI.yml)
+
 **SpeedCheck** is a simple command-line interface (CLI) tool designed to help users measure their internet speed using various popular speed test providers. Whether you want to check the performance of your connection through Cloudflare, Fast.com, Ookla, or M-Lab, SpeedCheck provides a unified and straightforward way to run these tests from the command line. This tool consolidates multiple speed test services into one easy-to-use package, allowing users to quickly and efficiently assess their internet connection's download and upload speeds, latency, and overall performance.
 
 

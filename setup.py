@@ -9,7 +9,7 @@ def readme():
 
 setup(
     name="speedcheck",
-    version="0.0.1",
+    version="0.0.2",
     python_requires=">=3.6",
     packages=find_packages(),
     url="https://github.com/samapriya/speedcheck",
@@ -24,7 +24,7 @@ setup(
     long_description=readme(),
     long_description_content_type="text/markdown",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "License :: OSI Approved :: Apache Software License",
@@ -36,10 +36,11 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Operating System :: OS Independent",
     ],
     author="Samapriya Roy",
     author_email="samapriya.roy@gmail.com",
-    description="A Python package for running internet speed tests",
+    description="Simple CLI for running internet speed tests",
     entry_points={"console_scripts": ["speedcheck=speedcheck.speedcheck:main"]},
 )

@@ -35,6 +35,8 @@ from .speedtest_cflare import cflare_speedtest
 from .speedtest_fast import fast_speed_test
 from .speedtest_mlab import mlab_speed_test
 from .speedtest_ookla import ookla_speed_test
+from .speedtest_openspeedtest import openspeedtest_speed_test
+from .speedtest_speedsmart import speedsmart_speed_test
 
 # Set a custom log formatter
 logging.basicConfig(
@@ -127,6 +129,8 @@ def speedcheck_info():
     speedcheck_dict["fast"] = "Runs speedtest from fast.com"
     speedcheck_dict["ookla"] = "Runs speedtest from Ookla speedtest: speedtest.ookla.com"
     speedcheck_dict["mlab"] = "Runs speedtest from mlab: speedtest.mlab.com"
+    speedcheck_dict["openspeedtest"] = "Runs speedtest from Open Speed Test: openspeedtest.com"
+    speedcheck_dict["speedsmart"] = "Runs speedtest from Speed Smart: speedsmart.net"
     print(json.dumps(speedcheck_dict, indent=2))
 
 
@@ -143,6 +147,10 @@ def speedcheck_run(speedtest):
         ookla_speed_test()
     elif speedtest == "mlab":
         mlab_speed_test()
+    elif speedtest == "openspeedtest":
+        openspeedtest_speed_test()
+    elif speedtest == "speedsmart":
+        speedsmart_speed_test()
     else:
         print("Invalid speedtest type")
 
@@ -156,7 +164,7 @@ def speedcheck_run_from_parser(args):
 
 def main(args=None):
     parser = argparse.ArgumentParser(
-        description="Simple CLI for running speed tests"
+        description="Simple CLI for running internet speed tests"
     )
 
     subparsers = parser.add_subparsers()
@@ -177,7 +185,7 @@ def main(args=None):
     required_named = parser_run.add_argument_group("Required named arguments.")
     required_named.add_argument(
         "--type",
-        help="Speedtest type: cloudflare, fast, ookla, mlab",
+        help="Speedtest type: cloudflare, fast, ookla, mlab, openspeedtest, speedsmart",
         required=True,
     )
     parser_run.set_defaults(func=speedcheck_run_from_parser)

@@ -31,4 +31,4 @@ jobs:
           python3 setup.py install
           playwright install
           speedcheck -h
-          speedcheck run --test mlab
+          speedcheck run --type mlab

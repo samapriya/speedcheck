@@ -24,7 +24,6 @@ jobs:
         continue-on-error: true
         run: 
           sudo apt-get update
-          sudo apt-get upgrade -y
           sudo apt-get install python3-pip
         if: matrix.os == 'ubuntu-latest'
       - name: Test package
@@ -32,3 +31,4 @@ jobs:
           python3 setup.py install
           playwright install
           speedcheck -h
+          speedcheck run --test mlab

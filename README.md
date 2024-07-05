@@ -100,7 +100,11 @@ For any questions or suggestions, feel free to open an issue on the GitHub repos
 
 ## Changelog
 
-#### v0.0.2
+#### v0.0.4
+- updated cloudflare runner to handle IP address with no region metadata
+- added IP to region lookup service
+
+#### v0.0.3
 - avoid printing extraneous information for cloudflare tests
 - added additional dependency information & blog link
 - updated readme with logo and badges

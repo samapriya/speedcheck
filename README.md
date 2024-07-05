@@ -1,10 +1,35 @@
-# SpeedCheck
+<p align="center">
+  <img src="https://github.com/samapriya/speedcheck/assets/6677629/f5eab7b1-ee73-4074-b1fa-662b8bc42752" width="128" height="128" alt="Your image description">
+</p>
 
-![PyPI - Version](https://img.shields.io/pypi/v/speedcheck)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![CI speedcheck](https://github.com/samapriya/speedcheck/actions/workflows/CI.yml/badge.svg)](https://github.com/samapriya/speedcheck/actions/workflows/CI.yml)
+<p align="center">
+  <strong>
+    SpeedCheck: A Simple combined Internet Speedtest
+    <a href="https://pypi.org/project/speedcheck"></a>
+  </strong>
+</p>
 
-**SpeedCheck** is a simple command-line interface (CLI) tool designed to help users measure their internet speed using various popular speed test providers. Whether you want to check the performance of your connection through Cloudflare, Fast.com, Ookla, or M-Lab, SpeedCheck provides a unified and straightforward way to run these tests from the command line. This tool consolidates multiple speed test services into one easy-to-use package, allowing users to quickly and efficiently assess their internet connection's download and upload speeds, latency, and overall performance.
+<p align="center">
+  <a href="https://github.com/samapriya/speedcheck/actions/workflows/CI.yml"><img
+    src="https://github.com/samapriya/speedcheck/actions/workflows/CI.yml/badge.svg"
+    alt="Build"
+  /></a>
+  <a href="https://pypi.org/project/speedcheck"><img
+    src="https://img.shields.io/pypi/v/speedcheck"
+    alt="Python Package Index"
+  /></a>
+  <a href="https://opensource.org/licenses/Apache-2.0"><img
+    src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"
+    alt="License"
+  /></a>
+</p>
+
+<p align="center">
+  Run a quick speed check across multiple speed test providers
+  Simple CLI to combine these and provide a JSON response for all
+</p>
+
+**SpeedCheck** is a simple command-line interface (CLI) tool designed to help users measure their internet speed using various popular speed test providers. Read about the [motivation and additional details about this project here](https://datacommons.substack.com/p/data-commons-and-connectivity-exploring). Whether you want to check the performance of your connection through Cloudflare, Fast.com, Ookla, or M-Lab, SpeedCheck provides a unified and straightforward way to run these tests from the command line. This tool consolidates multiple speed test services into one easy-to-use package, allowing users to quickly and efficiently assess their internet connection's download and upload speeds, latency, and overall performance.
 
 
 ## Features
@@ -32,7 +57,8 @@ pip install speedcheck
 We recommend using a virtual environment to manage dependencies. Once your virtual environment is set up, make sure to run the following command to ensure that the necessary browsers are downloaded
 
 ```
-playwright install
+playwright install #For playwright to get setup properly
+playwright install-deps  # May be necessary on some systems
 ```
 
 The rest of the setup is handled through setup.py. This project is in its early stages, so your feedback and contributions are highly appreciated.

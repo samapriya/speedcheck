@@ -180,7 +180,7 @@ class CloudflareSpeedtest:
 
     def _sprint(self, label: str, result: TestResult, *, meta: bool = False) -> None:
         """Add an entry to the suite results and log it."""
-        log.info("%s: %s", label, result.value)
+        #log.info("%s: %s", label, result.value)
         save_to = self.results["meta"] if meta else self.results["tests"]
         if label not in save_to:
             save_to[label] = []

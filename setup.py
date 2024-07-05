@@ -9,8 +9,8 @@ def readme():
 
 setup(
     name="speedcheck",
-    version="0.0.2",
-    python_requires=">=3.6",
+    version="0.0.3",
+    python_requires=">=3.9",
     packages=find_packages(),
     url="https://github.com/samapriya/speedcheck",
     install_requires=[
@@ -29,9 +29,6 @@ setup(
         "Natural Language :: English",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",

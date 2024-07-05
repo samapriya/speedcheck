@@ -101,6 +101,12 @@ For any questions or suggestions, feel free to open an issue on the GitHub repos
 ## Changelog
 
 #### v0.0.2
+- avoid printing extraneous information for cloudflare tests
+- added additional dependency information & blog link
+- updated readme with logo and badges
+- enabled version check
+
+#### v0.0.2
 - added speedsmart and openspeedtest
 - increased project maturity to beta
 - added readme docs

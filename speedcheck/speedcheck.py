@@ -107,6 +107,7 @@ def speedcheck_version(package):
     elif latest_version is None and installed_version is None:
         print(f"Package {package} not found on PyPI and not installed")
 
+speedcheck_version("speedcheck")
 
 # # Go to the readMe
 # def readme():

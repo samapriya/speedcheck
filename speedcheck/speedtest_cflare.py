@@ -9,26 +9,19 @@ import requests
 
 log = logging.getLogger("cfspeedtest")
 
-
 class TestType(Enum):
-    """The type of an individual test."""
     Down = "GET"
     Up = "POST"
 
-
 class TestSpec(NamedTuple):
-    """The specifications of an individual test."""
     size: int
-    """The size of the test in bytes."""
     iterations: int
     name: str
     type: TestType
 
     @property
     def bits(self) -> int:
-        """The size of the test in bits."""
         return self.size * 8
-
 
 TestSpecs = tuple[TestSpec, ...]
 
@@ -49,24 +42,16 @@ DEFAULT_TESTS: TestSpecs = (
     *UPLOAD_TESTS,
 )
 
-
 class TestResult(NamedTuple):
-    """The result of an individual test."""
     value: Any
     time: float = time.time()
 
-
 class TestTimers(NamedTuple):
-    """A collection of test timer collections, measured in seconds."""
     full: list[float]
-    """The times taken to prepare and perform the requests."""
     server: list[float]
-    """The times taken to process the requests as reported by the worker."""
     request: list[float]
-    """The internal client times elapsed to complete the requests."""
 
     def to_speeds(self, test: TestSpec) -> list[int]:
-        """Compute the test speeds in bits per second from its type and size."""
         if test.type == TestType.Up:
             return [int(test.bits / server_time) for server_time in self.server]
         return [
@@ -75,7 +60,6 @@ class TestTimers(NamedTuple):
         ]
 
     def to_latencies(self) -> list[float]:
-        """Compute the test latencies in milliseconds."""
         return [
             (request_time - server_time) * 1e3
             for request_time, server_time in zip(self.request, self.server)
@@ -83,7 +67,6 @@ class TestTimers(NamedTuple):
 
     @staticmethod
     def jitter_from(latencies: list[float]) -> float | None:
-        """Compute jitter as average deviation between consecutive latencies."""
         if len(latencies) < 2:
             return None
         return statistics.mean(
@@ -93,18 +76,13 @@ class TestTimers(NamedTuple):
             ]
         )
 
-
 class TestMetadata(NamedTuple):
-    """The metadata of a test suite."""
     ip: str
     isp: str
     location_code: str
     region: str
-    city: str
-
 
 def _calculate_percentile(data: list[float], percentile: float) -> float:
-    """Find the percentile of a list of values."""
     data = sorted(data)
     idx = (len(data) - 1) * percentile
     rem = idx % 1
@@ -115,25 +93,10 @@ def _calculate_percentile(data: list[float], percentile: float) -> float:
     edges = (data[int(idx)], data[int(idx) + 1])
     return edges[0] + (edges[1] - edges[0]) * rem
 
-
 SuiteResults = dict[str, dict[str, TestResult]]
 
-
 class CloudflareSpeedtest:
-    """Suite of speedtests."""
-
     def __init__(self, results: SuiteResults | None = None, tests: TestSpecs = DEFAULT_TESTS, timeout: tuple[float, float] | float = (10, 25)) -> None:
-        """
-        Initialize the test suite.
-
-        Arguments:
-        ---------
-        - `results`: A dictionary of test results. This can be used to include
-        results from previous runs.
-        - `tests`: The specifications (see `TestSpec`) for all tests to run.
-        - `timeout`: The timeout settings for all requests. See the Timeouts
-        page of the `requests` documentation for more information.
-        """
         self.results = results or {}
         self.results.setdefault("tests", {})
         self.results.setdefault("meta", {})
@@ -142,21 +105,43 @@ class CloudflareSpeedtest:
         self.request_sess = requests.Session()
         self.timeout = timeout
 
+    def get_location_data(self, ip_address: str, max_retries: int = 3) -> dict[str, str | float]:
+        url = f'https://json.geoiplookup.io/{ip_address}'
+        attempt = 0
+
+        while attempt < max_retries:
+            response = requests.get(url)
+            if response.status_code == 200:
+                response_data = response.json()
+                return {
+                    "ip": ip_address,
+                    "region": response_data.get("region", "NA"),  # Update field name
+                    "country": response_data.get("country_name"),
+                    "latitude": response_data.get("latitude"),
+                    "longitude": response_data.get("longitude"),
+                    "isp": response_data.get("isp"),
+                    "timezone": response_data.get("timezone_name")
+                }
+            attempt += 1
+
+        return {"region": "NA"}
+
     def metadata(self) -> TestMetadata:
-        """Retrieve test location code, IP address, ISP, city, and region."""
         result_data: dict[str, str] = self.request_sess.get(
             "https://speed.cloudflare.com/meta"
         ).json()
+
+        ip_address = result_data["clientIp"]
+        location_data = self.get_location_data(ip_address)
+
         return TestMetadata(
             result_data["clientIp"],
             result_data["asOrganization"],
             result_data["colo"],
-            result_data["region"],
-            result_data["city"],
+            location_data.get("region", "NA"),
         )
 
     def run_test(self, test: TestSpec) -> TestTimers:
-        """Run a test specification iteratively and collect timers."""
         coll = TestTimers([], [], [])
         url = f"https://speed.cloudflare.com/__down?bytes={test.size}"
         data = None
@@ -179,7 +164,6 @@ class CloudflareSpeedtest:
         return coll
 
     def _sprint(self, label: str, result: TestResult, *, meta: bool = False) -> None:
-        """Add an entry to the suite results and log it."""
         #log.info("%s: %s", label, result.value)
         save_to = self.results["meta"] if meta else self.results["tests"]
         if label not in save_to:
@@ -189,12 +173,10 @@ class CloudflareSpeedtest:
     def run_all(self, *, megabits: bool = False) -> SuiteResults:
         animation = "|/-\\"
         animation_index = 0
-        """Run the full test suite."""
         meta = self.metadata()
         self._sprint("ip", TestResult(meta.ip), meta=True)
         self._sprint("isp", TestResult(meta.isp))
         self._sprint("location_code", TestResult(meta.location_code), meta=True)
-        self._sprint("location_city", TestResult(meta.city), meta=True)
         self._sprint("location_region", TestResult(meta.region), meta=True)
 
         data = {"down": [], "up": []}
@@ -245,34 +227,34 @@ class CloudflareSpeedtest:
 
     @staticmethod
     def results_to_dict(results: SuiteResults) -> dict[str, dict[str, dict[str, float]]]:
-        """Convert the test results to a full dictionary."""
         return {
             k: {sk: [res._asdict() for res in sv]}
             for k, v in results.items()
             for sk, sv in v.items()
         }
 
-
 def cflare_speedtest():
-    print("\n"+"Running Cloudflare Speed Test (speed.cloudflare.com)"+"\n")
-    # Instantiate the CloudflareSpeedtest object
+    print("\nRunning Cloudflare Speed Test (speed.cloudflare.com)\n")
     speedtest = CloudflareSpeedtest()
-
-    # Run all tests and collect results
     data = speedtest.run_all()
-
-    # Remove timestamp from each list
     for key in data:
         for subkey in data[key]:
             data[key][subkey] = [item[0] for item in data[key][subkey]]
 
-    result_dict = {}
-    result_dict['location']=f"{data['meta']['location_city'][0]}, {data['meta']['location_region'][0]}"
-    result_dict['Mean Download speed'] = f"{round(data['tests']['90th_percentile_down_bps'][0]/1_000_000,2)} Mbps"
-    result_dict['Mean Upload speed'] = f"{round(data['tests']['90th_percentile_up_bps'][0]/1_000_000,2)} Mbps"
-    result_dict['Latency'] = f"{data['tests']['latency'][0]} ms"
-    result_dict['Jitter'] = f"{data['tests']['jitter'][0]} ms"
-    result_dict['ISP'] = f"{data['tests']['isp'][0]}"
+    result_dict = {
+        'Download Speed': f"{round(data['tests']['90th_percentile_down_bps'][0] / 1_000_000, 2)} Mbps",
+        'Upload Speed': f"{round(data['tests']['90th_percentile_up_bps'][0] / 1_000_000, 2)} Mbps",
+        'Latency': f"{round(data['tests']['latency'][0], 2)} ms",
+        'Jitter': f"{round(data['tests']['jitter'][0], 2)} ms"
+    }
+
+    # Print metadata
+    metadata = speedtest.metadata()
+    result_dict["IP"] = metadata.ip
+    result_dict["ISP"] = metadata.isp
+    result_dict["Location Code"] = metadata.location_code
+    result_dict["Region"] = metadata.region
     print("\n"+json.dumps(result_dict, indent=2))
 
-#cflare_speedtest()
+if __name__ == "__main__":
+    cflare_speedtest()

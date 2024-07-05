@@ -22,8 +22,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install Dependencies (Ubuntu)
         continue-on-error: true
-        run: 
-          sudo apt-get update
+        run: sudo apt-get update
           sudo apt-get install python3-pip
         if: matrix.os == 'ubuntu-latest'
       - name: Test package
@@ -32,3 +31,4 @@ jobs:
           playwright install
           speedcheck -h
           speedcheck run --type mlab
+          speedcheck run --type cloudflare

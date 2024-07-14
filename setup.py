@@ -9,7 +9,7 @@ def readme():
 
 setup(
     name="speedcheck",
-    version="0.0.4",
+    version="0.0.5",
     python_requires=">=3.9",
     packages=find_packages(),
     url="https://github.com/samapriya/speedcheck",

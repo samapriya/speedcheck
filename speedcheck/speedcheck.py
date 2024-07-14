@@ -21,6 +21,7 @@ import importlib
 import json
 import logging
 import os
+import subprocess
 import sys
 import webbrowser
 from importlib.metadata import version
@@ -123,6 +124,22 @@ speedcheck_version("speedcheck")
 # def read_from_parser(args):
 #     readme()
 
+def setup_playwright():
+    try:
+        result = subprocess.run(["playwright", "install"], capture_output=True, text=True)
+        if result.returncode != 0:
+            raise subprocess.CalledProcessError(result.returncode, result.stderr)
+
+        result = subprocess.run(["playwright", "install-deps"], capture_output=True, text=True)
+        if result.returncode != 0:
+            raise subprocess.CalledProcessError(result.returncode, result.stderr)
+        print("\n"+"Successfully set up Playwright. Setup complete")
+    except subprocess.CalledProcessError as error:
+        print(f"Error occurred during playwright setup: {error}")
+        sys.exit("Issues setting up Playwright.")
+
+def setup_env_from_parser(args):
+    setup_playwright()
 
 def speedcheck_info():
     speedcheck_dict = {}
@@ -174,6 +191,11 @@ def main(args=None):
     #     "readme", help="Go the web based speedcheck readme page"
     # )
     # parser_read.set_defaults(func=read_from_parser)
+
+    parser_setup = subparsers.add_parser(
+        "setup", help="Setup speedcheck & install dependencies"
+    )
+    parser_setup.set_defaults(func=setup_env_from_parser)
 
     parser_info = subparsers.add_parser(
         "info", help="Prints info about speedcheck"

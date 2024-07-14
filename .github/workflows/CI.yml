@@ -28,7 +28,7 @@ jobs:
       - name: Test package
         run: |
           python3 setup.py install
-          playwright install
           speedcheck -h
+          speedcheck setup
           speedcheck run --type mlab
           speedcheck run --type cloudflare

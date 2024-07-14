@@ -57,11 +57,10 @@ pip install speedcheck
 We recommend using a virtual environment to manage dependencies. Once your virtual environment is set up, make sure to run the following command to ensure that the necessary browsers are downloaded
 
 ```
-playwright install #For playwright to get setup properly
-playwright install-deps  # May be necessary on some systems
+speedcheck setup
 ```
 
-The rest of the setup is handled through setup.py. This project is in its early stages, so your feedback and contributions are highly appreciated.
+The rest of the dependencies are handled through setup.py. This project is in its early stages, so your feedback and contributions are highly appreciated.
 
 ## Usage
 
@@ -99,6 +98,9 @@ Contributions are welcome! Please open an issue or submit a pull request on GitH
 For any questions or suggestions, feel free to open an issue on the GitHub repository.
 
 ## Changelog
+
+#### v0.0.5
+- added ```speedcheck setup``` tool to handle playwright & playwright dependencies
 
 #### v0.0.4
 - updated cloudflare runner to handle IP address with no region metadata
